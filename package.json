@@ -1,0 +1,9 @@
+{
+  "name": "resrc",
+  "version": "1.0.0",
+  "description": "a lightweight, standalone library based on angular\'s ngresrouce",
+  "authors": [
+    "Danny Hadley <dadleyy@gmail.com>"
+  ],
+  "license": "ISC"
+}
