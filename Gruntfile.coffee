@@ -8,11 +8,11 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-uglify"
 
   grunt.initConfig
-    clean: require "./grunt/clean"
-    jasmine: require "./grunt/jasmine"
-    coffee: require "./grunt/coffee"
-    watch: require "./grunt/watch"
-    uglify: require "./grunt/uglify"
+    clean: require "./auto/clean"
+    jasmine: require "./auto/jasmine"
+    coffee: require "./auto/coffee"
+    watch: require "./auto/watch"
+    uglify: require "./auto/uglify"
 
   grunt.registerTask "release", [
     "clean"
