@@ -17,7 +17,7 @@ module.exports = (grunt) ->
   grunt.registerTask "release", [
     "clean"
     "coffee:debug"
-    "jasmine:unit"
+    "jasmine:release"
     "uglify:release"
   ]
 

@@ -9,3 +9,4 @@ install:
 
 script:
   - grunt release
+  - ./auto/bower_publish.sh

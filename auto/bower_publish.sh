@@ -5,6 +5,11 @@ TMP_DIR=$(echo $BASE_DIR/tmp)
 BOWER_DIR=$(echo $TMP_DIR/bower-repo)
 DIST_DIR=$(echo $BASE_DIR/dist)
 
+if [ -z "$TRAVIS_TAG" ]; then
+  echo "no tag found, skipping bower publish"
+  exit 1
+fi
+
 function publish {
   local commit_msg="[auto](${GIT_COMMIT})"
 
