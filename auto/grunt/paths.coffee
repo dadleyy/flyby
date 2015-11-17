@@ -1,7 +1,7 @@
 path = require "path"
 
 config =
-  base: path.join __dirname, ".."
+  base: path.join __dirname, "..", ".."
 
 config.src = path.join config.base, "src"
 config.dest = path.join config.base, "dist"
