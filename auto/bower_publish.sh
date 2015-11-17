@@ -7,7 +7,7 @@ DIST_DIR=$(echo $BASE_DIR/dist)
 
 if [ -z "$TRAVIS_TAG" ]; then
   echo "no tag found, skipping bower publish"
-  exit 1
+  exit 0
 fi
 
 function publish {

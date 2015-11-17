@@ -1,4 +1,4 @@
-# Flyby
+# Flyby [![Build Status](https://travis-ci.org/dadleyy/flyby.svg?branch=reorg_1)](https://travis-ci.org/dadleyy/flyby)
 
 A lightweight library for mapping client-side interactions to server-side apis. The project was heavily influenced by angular's [ngResource](https://github.com/angular/angular.js/blob/master/src/ngResource/resource.js), and was originally built to bring the functionality out of the framework, allowing non-angular applications to use it's interface.
 
