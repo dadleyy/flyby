@@ -78,6 +78,7 @@ function publish {
 
   git clone https://github.com/dadleyy/flyby-bower.git $BOWER_DIR
 
+  cp "${BASE_DIR}/README.md" $BOWER_DIR
   cp "${BASE_DIR}/bower.json" $BOWER_DIR
   cp "${DIST_DIR}/flyby.min.js" $BOWER_DIR
   cp "${DIST_DIR}/flyby.js" $BOWER_DIR
