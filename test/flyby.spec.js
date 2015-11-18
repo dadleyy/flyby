@@ -205,20 +205,40 @@ describe("", function() {
   describe("basic resource definition", function() {
 
     beforeEach(function() {
-      TestResource = Flyby("/api/items/:id", {"id": "@id"}, {
-        custom: {
-          method: "POST",
-          has_body: true,
-          transform: {
-            request: function(data) {
-              return JSON.stringify(Object.keys(data));
-            },
-            response: function(response_text) {
-              return "hello world";
-            }
+      var actions = {};
+
+      actions.strange = {
+        method: "GET",
+        has_body: false,
+        headers: {
+          "x-strange-header": "yes"
+        }
+      };
+
+      actions.stranger = {
+        method: "GET",
+        has_body: false,
+        headers: {
+          "x-strange-header": function(data) {
+            return data.id;
           }
         }
-      });
+      };
+
+      actions.custom = {
+        method: "POST",
+        has_body: true,
+        transform: {
+          request: function(data) {
+            return JSON.stringify(Object.keys(data));
+          },
+          response: function(response_text) {
+            return "hello world";
+          }
+        }
+      };
+
+      TestResource = Flyby("/api/items/:id", {"id": "@id"}, actions);
     });
 
     describe("getting resource with .get", function() {
@@ -276,6 +296,20 @@ describe("", function() {
         TestResource.destroy({id: 22});
         expect(requests.latest().method).toBe("DESTROY");
         expect(requests.latest().url).toBe("/api/items/22");
+      });
+
+    });
+
+    describe("using custom http headers", function() {
+
+      it("should use the headers configured by the action", function() {
+        TestResource.strange({id: 1});
+        expect(requests.latest().requestHeaders["x-strange-header"]).toBe("yes");
+      });
+
+      it("should support actions using functions for their headers", function() {
+        TestResource.stranger({id: "whoa"});
+        expect(requests.latest().requestHeaders["x-strange-header"]).toBe("whoa");
       });
 
     });
