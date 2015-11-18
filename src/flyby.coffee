@@ -229,6 +229,7 @@ Flyby = (resource_url, url_mappings, custom_actions) ->
         request_url = [request_url, query_str].join "?"
 
       for key, value of headers
+        value = value data if isFunction value
         xhr.setRequestHeader key, value if value != undefined
 
       xhr.open method, request_url, true
