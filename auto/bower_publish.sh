@@ -52,7 +52,7 @@ if [ -z "$TRAVIS_TAG" ]; then
     exit 0
   fi
 
-  echo "no travis tag found, using latest tag with commit hash - $TRAVIS_TAG"
+  echo "this is not a tagged build, skipping"
   exit 0
 fi
 
