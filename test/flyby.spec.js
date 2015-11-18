@@ -205,7 +205,8 @@ describe("", function() {
   describe("basic resource definition", function() {
 
     beforeEach(function() {
-      var actions = {};
+      var actions = {},
+          mappings = {};
 
       actions.strange = {
         method: "GET",
@@ -238,7 +239,24 @@ describe("", function() {
         }
       };
 
-      TestResource = Flyby("/api/items/:id", {"id": "@id"}, actions);
+      mappings["id"] = "@id";
+      mappings["options"] = ["@opt_a", "@opt_b"];
+
+      TestResource = Flyby("/api/items/:id/:options", mappings, actions);
+    });
+
+    describe("using a url parameter with an array for the mapping", function() {
+
+      it("should use the first key found", function() {
+        TestResource.get({opt_a: "huzzah"});
+        expect(requests.latest().url).toBe("/api/items/huzzah");
+      });
+
+      it("should fallback to the second key if the first is not provided", function() {
+        TestResource.get({opt_b: "yea"});
+        expect(requests.latest().url).toBe("/api/items/yea");
+      });
+
     });
 
     describe("getting resource with .get", function() {

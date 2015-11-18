@@ -36,12 +36,16 @@ isSuccess = (code) ->
 isObject = (x) ->
   /object/i.test typeof x
 
+isString = (x) ->
+  /string/i.test typeof x
+
 typeCheck = (tester) ->
   (x) -> ((toString.call x).match tester) != null
 
 isFile = typeCheck /\[object\sfile\]/i
 isBlob = typeCheck /\[object\sblob\]/i
 isFormData = typeCheck /\[object\sformdata\]/i
+isArray = typeCheck /\[object\sarray\]/i
 
 toJson = (x) ->
   JSON.stringify x
@@ -128,14 +132,30 @@ fn =
 
     data
 
-  extractObjectMappings: (data={}, mappings={}) ->
+  extractObjectMappings: (data={}, mappings={}, mapped=[]) ->
     result = {}
 
+    search = (keys) ->
+      found = undefined
+      keys = keys.slice 0
+      key = null
+
+      while found == undefined and keys.length > 0
+        key = keys.shift()
+        continue if (key.charAt 0) != "@"
+        found = fn.lookupDotted data, key.slice 1
+
+      mapped.push key.slice 1
+
+      found
+
     for m, v of mappings
-      if (typeof v ==  "string") and (v.charAt 0) == "@"
-        data_val = fn.lookupDotted data, v.slice 1
-        result[m] = data_val if data_val
-      if (typeof v == "function")
+      if (isArray v)
+        result[m] = search v
+      if (isString v) and (v.charAt 0) == "@"
+        mapped.push v.slice 1
+        result[m] = fn.lookupDotted data, v.slice 1
+      if isFunction v
         result[m] = v data
 
     result
@@ -217,8 +237,8 @@ Flyby = (resource_url, url_mappings, custom_actions) ->
     transforms = action_config.transform or {}
 
     handler = (data, callback) ->
-      mapping_data = fn.extractObjectMappings data, action_mappings
-      mapping_keys = (k for k of mapping_data)
+      mapping_keys = []
+      mapping_data = fn.extractObjectMappings data, action_mappings, mapping_keys
       leftover = fn.omit data, mapping_keys
       query_str = fn.queryString leftover
       request_url = fn.transformUrl action_url, mapping_data
