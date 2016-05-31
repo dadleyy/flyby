@@ -18,6 +18,7 @@
     "grunt-contrib-concat": "^0.5.1",
     "grunt-contrib-uglify": "^0.10.1",
     "grunt-contrib-watch": "^0.6.1",
+    "ibrik": "^2.0.0",
     "jasmine-ajax": "^3.2.0",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.22",
@@ -26,5 +27,8 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "phantomjs": "^2.1.7",
     "phantomjs-prebuilt": "^2.1.7"
+  },
+  "dependencies": {
+    "karma-coffee-preprocessor": "^1.0.0"
   }
 }

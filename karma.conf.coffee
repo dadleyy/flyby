@@ -9,20 +9,21 @@ module.exports = (karma) ->
   jasmineAjax.$inject = ["config.files"]
 
   files = [
-    "dist/**/*.js"
+    "src/**/*.coffee"
     "test/**/*.js"
   ]
 
   reporters = ["progress", "coverage"]
 
   preprocessors =
-    "dist/**/*.js": ["coverage"]
+    "src/**/*.coffee": ["coverage"]
 
   browsers = ["PhantomJS"]
 
   plugins = [
     "karma-jasmine"
     "karma-coverage"
+    "karma-coffee-preprocessor"
     "karma-phantomjs-launcher"
     {"framework:jasmine-ajax": ["factory", jasmineAjax]}
   ]
@@ -34,8 +35,15 @@ module.exports = (karma) ->
 
   config = {files, reporters, browsers, plugins, frameworks, preprocessors}
 
+  config.coffeePreprocessor =
+    options: sourceMaps: true
+
   config.coverageReporter =
     dir: "./cov"
+    instrumenters:
+      ibrik : require "ibrik"
+    instrumenter:
+      "**/*.coffee": "ibrik"
     reporters: [
       type: "lcov"
     ]
