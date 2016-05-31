@@ -1,19 +1,14 @@
 DEFAULT_ACTIONS =
-  get: {
-    method: "GET"
-  }
-  create: {
+  get: method: "GET"
+  create:
     method: "POST"
     has_body: true
-  }
-  update: {
+  update:
     method: "PATCH"
     has_body: true
-  }
-  destroy: {
+  destroy:
     method: "DESTROY"
     has_body: true
-  }
 
 MEMBER_NAME_REGEX = /^(\.[a-zA-Z_$][0-9a-zA-Z_$]*)+$/
 
@@ -85,7 +80,7 @@ defaultRequestTransform = (data) ->
 defaultResponseTransform = (data, header_string) ->
   result = data
 
-  if not (typeof data).match /string/i
+  unless (typeof data).match /string/i
     return result
 
   header = headerGetterFactory header_string

@@ -9,4 +9,5 @@ install:
 
 script:
   - grunt release
+  - npm test
   - ./auto/bower_publish.sh

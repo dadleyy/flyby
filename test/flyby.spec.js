@@ -1,4 +1,4 @@
-describe("", function() {
+describe("Flyby test suite", function() {
 
   var TestResource,
       requests = function() { return jasmine.Ajax.requests; };
