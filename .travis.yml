@@ -11,9 +11,9 @@ install:
   - npm install grunt-cli -g
 
 script:
-  - grunt release
-  - npm test
+  - npm run build:release
 
 after_success:
+  - ./node_modules/.bin
   - bash <(curl -s https://codecov.io/bash)
   - ./auto/bower_publish.sh

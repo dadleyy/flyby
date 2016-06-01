@@ -1,11 +1,11 @@
 path = require "path"
 
-config =
-  base: path.join __dirname, "..", ".."
+base = path.join __dirname, "..", ".."
 
-config.src = path.join config.base, "src"
-config.dest = path.join config.base, "dist"
-config.dest_cov = path.join config.base, "dist-cov"
-config.test = path.join config.base, "test"
+src  = path.join base, "src"
+dest = path.join base, "dist"
+cov  = path.join base, "cov"
+temp = path.join base, "tmp"
+test = path.join base, "test"
 
-module.exports = config
+module.exports = {src, base, dest, cov, temp, test}

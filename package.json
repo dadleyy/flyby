@@ -6,29 +6,30 @@
     "Danny Hadley <dadleyy@gmail.com>"
   ],
   "scripts": {
+    "build:debug": "./node_modules/.bin/grunt",
+    "build:full": "./node_modules/.bin/grunt && ./node_modules/.bin/karma start --single-run && ./node_modules/.bin/remap-istanbul -i cov/coverage-final.json -o cov/coverage-final.json",
+    "build:release": "./node_modules/.bin/grunt release && ./node_modules/.bin/karma start --single-run && ./node_modules/.bin/remap-istanbul -i cov/coverage-final.json -o cov/coverage-final.json",
     "test": "./node_modules/.bin/karma start --single-run=true"
   },
   "license": "ISC",
   "devDependencies": {
-    "coffee-script": "^1.10.0",
-    "grunt": "^0.4.5",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "^0.7.0",
-    "grunt-contrib-coffee": "^0.13.0",
-    "grunt-contrib-concat": "^0.5.1",
-    "grunt-contrib-uglify": "^0.10.1",
-    "grunt-contrib-watch": "^0.6.1",
-    "ibrik": "^2.0.0",
-    "jasmine-ajax": "^3.2.0",
-    "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
-    "karma-coverage": "^1.0.0",
-    "karma-jasmine": "^1.0.2",
-    "karma-phantomjs-launcher": "^1.0.0",
+    "coffee-script": "1.10.0",
+    "grunt": "0.4.5",
+    "grunt-cli": "1.2.0",
+    "grunt-contrib-clean": "0.7.0",
+    "grunt-contrib-coffee": "0.13.0",
+    "grunt-contrib-concat": "0.5.1",
+    "grunt-contrib-uglify": "0.10.1",
+    "grunt-contrib-watch": "0.6.1",
+    "jasmine-ajax": "3.2.0",
+    "jasmine-core": "2.4.1",
+    "karma": "0.13.22",
+    "karma-coverage": "1.0.0",
+    "karma-jasmine": "1.0.2",
+    "karma-phantomjs-launcher": "1.0.0",
     "phantomjs": "^2.1.7",
-    "phantomjs-prebuilt": "^2.1.7"
-  },
-  "dependencies": {
+    "phantomjs-prebuilt": "^2.1.7",
+    "remap-istanbul": "^0.6.4",
     "karma-coffee-preprocessor": "^1.0.0"
   }
 }

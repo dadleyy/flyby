@@ -12,13 +12,19 @@ module.exports = (grunt) ->
     watch: require "./auto/grunt/watch"
     uglify: require "./auto/grunt/uglify"
 
+  grunt.registerTask "clean:all", [
+    "clean:cov"
+    "clean:dist"
+    "clean:temp"
+  ]
+
   grunt.registerTask "release", [
-    "clean"
+    "clean:all"
     "coffee:debug"
     "uglify:release"
   ]
 
   grunt.registerTask "default", [
-    "clean"
+    "clean:all"
     "coffee:debug"
   ]

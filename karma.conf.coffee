@@ -9,14 +9,14 @@ module.exports = (karma) ->
   jasmineAjax.$inject = ["config.files"]
 
   files = [
-    "src/**/*.coffee"
+    "dist/flyby.js"
     "test/**/*.js"
   ]
 
   reporters = ["progress", "coverage"]
 
   preprocessors =
-    "src/**/*.coffee": ["coverage"]
+    "dist/flyby.js": ["coverage"]
 
   browsers = ["PhantomJS"]
 
@@ -40,12 +40,9 @@ module.exports = (karma) ->
 
   config.coverageReporter =
     dir: "./cov"
-    instrumenters:
-      ibrik : require "ibrik"
-    instrumenter:
-      "**/*.coffee": "ibrik"
-    reporters: [
-      type: "lcov"
-    ]
+    reporters: [{
+      type: "json"
+      subdir: "."
+    }]
 
   karma.set config
