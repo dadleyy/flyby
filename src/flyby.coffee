@@ -97,8 +97,16 @@ defaultResponseTransform = (data, header_string) ->
   result
 
 fn =
-  xhr: () ->
-    new window.XMLHttpRequest()
+  # fn.upper
+  #
+  # returns the result of the first parameter's `toUpperCase` method being called 
+  # if exists, otherwise returns whatever is send it.
+  upper: (x) -> x.toUpperCase?() ? x
+
+  # fn.xhr
+  #
+  # returns a new xhr object
+  xhr: -> new window.XMLHttpRequest()
 
   extend: (target, sources...) ->
     if sources.length < 1 or not (/object/i.test typeof target)
@@ -227,7 +235,10 @@ Flyby = (resource_url, url_mappings, custom_actions) ->
   action = (name, action_config) ->
     action_url = action_config.url or resource_url
     action_mappings = fn.extend {}, url_mappings, action_config.params
-    method = (action_config.method or "GET").toUpperCase()
+
+    # check for a method defined on the custom action, otherwise revert to GET
+    method = fn.upper action_config.method ? "GET"
+
     has_body = action_config.has_body == true
     transforms = action_config.transform or {}
 
@@ -240,16 +251,19 @@ Flyby = (resource_url, url_mappings, custom_actions) ->
       headers = fn.extend {}, DEFAULT_HEADERS, action_config.headers
       xhr = fn.xhr()
 
+      # if there is parameters leftover after extracting, add them
+      # to the request url after the original url
       if query_str != null and not has_body
-        request_url = [request_url, query_str].join "?"
+        request_url = "#{request_url}?#{query_str}"
 
       for key, value of headers
         value = value data if isFunction value
         xhr.setRequestHeader key, value if value != undefined
 
-      xhr.open method, request_url, true
+      request_method = (method? data) ? method
+      xhr.open request_method, request_url, true
 
-      loaded = () ->
+      loaded = ->
         status_text = xhr.statusText
         status_code = xhr.status
         response = if xhr.response then xhr.response else xhr.responseText
@@ -265,14 +279,15 @@ Flyby = (resource_url, url_mappings, custom_actions) ->
 
         callback {response: response}, undefined, xhr
 
-      error =  () ->
+      error =  ->
         callback {response: null}, undefined, xhr
 
       xhr.onload = loaded
       xhr.onerror = error
 
-      if not has_body
-        return xhr.send()
+      # if the action has not specified it needs a body send it along without
+      # performing any additional steps.
+      return xhr.send() unless has_body
 
       body_data = defaultRequestTransform data
 

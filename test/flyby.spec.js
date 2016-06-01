@@ -226,6 +226,12 @@ describe("Flyby test suite", function() {
         }
       };
 
+      actions.variableMethod = {
+        method: function(data) {
+          return data.id ? "PUT" : "POST";
+        }
+      };
+
       actions.custom = {
         method: "POST",
         has_body: true,
@@ -243,6 +249,20 @@ describe("Flyby test suite", function() {
       mappings["options"] = ["@opt_a", "@opt_b"];
 
       TestResource = Flyby("/api/items/:id/:options", mappings, actions);
+    });
+
+    describe("when using a custom action that has provided a callback for the method", function() {
+
+      it("should send PATCH based on the body", function() {
+        TestResource.variableMethod({id: 222});
+        expect(requests.latest().method).toBe("PUT");
+      });
+
+      it("should send POST based on the body", function() {
+        TestResource.variableMethod({id: null});
+        expect(requests.latest().method).toBe("POST");
+      });
+
     });
 
     describe("using a url parameter with an array for the mapping", function() {
