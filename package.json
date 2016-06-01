@@ -30,6 +30,7 @@
     "phantomjs": "^2.1.7",
     "phantomjs-prebuilt": "^2.1.7",
     "remap-istanbul": "^0.6.4",
-    "karma-coffee-preprocessor": "^1.0.0"
+    "karma-coffee-preprocessor": "^1.0.0",
+    "karma-mocha-reporter": "^2.0.3"
   }
 }

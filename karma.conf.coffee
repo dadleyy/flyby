@@ -13,7 +13,7 @@ module.exports = (karma) ->
     "test/**/*.js"
   ]
 
-  reporters = ["progress", "coverage"]
+  reporters = ["mocha", "coverage"]
 
   preprocessors =
     "dist/flyby.js": ["coverage"]
@@ -23,7 +23,7 @@ module.exports = (karma) ->
   plugins = [
     "karma-jasmine"
     "karma-coverage"
-    "karma-coffee-preprocessor"
+    "karma-mocha-reporter"
     "karma-phantomjs-launcher"
     {"framework:jasmine-ajax": ["factory", jasmineAjax]}
   ]
@@ -34,9 +34,6 @@ module.exports = (karma) ->
   ]
 
   config = {files, reporters, browsers, plugins, frameworks, preprocessors}
-
-  config.coffeePreprocessor =
-    options: sourceMaps: true
 
   config.coverageReporter =
     dir: "./cov"
