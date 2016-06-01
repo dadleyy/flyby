@@ -289,13 +289,12 @@ Flyby = (resource_url, url_mappings, custom_actions) ->
       # performing any additional steps.
       return xhr.send() unless has_body
 
-      body_data = defaultRequestTransform data
-
-      if isFunction transforms.request
-        body_data = transforms.request data
-
+      # attempt to transform body data if the action has provided a request transform
+      # callback
+      body_data = (transforms.request? data) ? defaultRequestTransform data
+  
+      # complete the xhr by sending it with the body data
       xhr.send body_data
-
       true
 
     handler
