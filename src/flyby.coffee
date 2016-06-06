@@ -256,12 +256,12 @@ Flyby = (resource_url, url_mappings, custom_actions) ->
       if query_str != null and not has_body
         request_url = "#{request_url}?#{query_str}"
 
+      request_method = (method? data) ? method
+      xhr.open request_method, request_url, true
+
       for key, value of headers
         value = value data if isFunction value
         xhr.setRequestHeader key, value if value != undefined
-
-      request_method = (method? data) ? method
-      xhr.open request_method, request_url, true
 
       loaded = ->
         status_text = xhr.statusText

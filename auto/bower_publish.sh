@@ -82,6 +82,7 @@ function publish {
   cp "${BASE_DIR}/bower.json" $BOWER_DIR
   cp "${DIST_DIR}/flyby.min.js" $BOWER_DIR
   cp "${DIST_DIR}/flyby.js" $BOWER_DIR
+  cp "${DIST_DIR}/flyby.js.map" $BOWER_DIR
 
   cd $BOWER_DIR
   local changes=$(git status --short)
