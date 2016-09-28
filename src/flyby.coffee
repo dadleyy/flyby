@@ -86,7 +86,7 @@ defaultResponseTransform = (data, header_string) ->
   header = headerGetterFactory header_string
   content_type = header "content-type"
 
-  if not content_type or not (content_type.match /^application\/json$/i)
+  if not content_type or not (content_type.match /application\/json/i)
     return result
 
   try
@@ -264,9 +264,8 @@ Flyby = (resource_url, url_mappings, custom_actions) ->
         xhr.setRequestHeader key, value if value != undefined
 
       loaded = ->
-        status_text = xhr.statusText
-        status_code = xhr.status
-        response = if xhr.response then xhr.response else xhr.responseText
+        {status: status_code, statusText: status_text, response} = xhr
+        response ||= xhr.responseText
         headers = xhr.getAllResponseHeaders()
 
         result = defaultResponseTransform response, headers
@@ -277,7 +276,7 @@ Flyby = (resource_url, url_mappings, custom_actions) ->
         if isSuccess status_code
           return callback false, result, xhr
 
-        callback {response: response}, undefined, xhr
+        callback {response}, undefined, xhr
 
       error =  ->
         callback {response: null}, undefined, xhr
