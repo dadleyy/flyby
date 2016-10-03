@@ -13,8 +13,8 @@ DEFAULT_ACTIONS =
 MEMBER_NAME_REGEX = /^(\.[a-zA-Z_$][0-9a-zA-Z_$]*)+$/
 
 DEFAULT_HEADERS =
-  "Content-Type": "application/json; charset=utf-8"
-  "Accept": "application/json, text/plain, */*"
+  "content-type": "application/json; charset=utf-8"
+  "accept": "application/json, text/plain, */*"
 
 CHAR_ENCODINGS =
   "%40": "@"
@@ -101,7 +101,8 @@ fn =
   #
   # returns the result of the first parameter's `toUpperCase` method being called 
   # if exists, otherwise returns whatever is send it.
-  upper: (x) -> x.toUpperCase?() ? x
+  upper: (x) -> x?.toUpperCase?() ? x
+  lower: (x) -> x?.toLowerCase() ? x
 
   # fn.xhr
   #
@@ -226,41 +227,59 @@ fn =
     url_template.replace /\/$/, ''
 
 
-Flyby = (resource_url, url_mappings, custom_actions) ->
+Flyby = (resource_url, resource_url_mappings, custom_actions) ->
   actions = fn.extend {}, DEFAULT_ACTIONS, custom_actions
 
   class Resource
     constructor: () ->
 
-  action = (name, action_config) ->
-    action_url = action_config.url or resource_url
-    action_mappings = fn.extend {}, url_mappings, action_config.params
+  action = (name, {method, headers, has_body, params, url, transform: transforms}) ->
+    # if no url was provided for this action, use the resource's
+    url ||= resource_url
 
-    # check for a method defined on the custom action, otherwise revert to GET
-    method = fn.upper action_config.method ? "GET"
-
-    has_body = action_config.has_body == true
-    transforms = action_config.transform or {}
+    # extend the resource params with our action params
+    params = fn.extend {}, resource_url_mappings, params
 
     handler = (data, callback) ->
       mapping_keys = []
-      mapping_data = fn.extractObjectMappings data, action_mappings, mapping_keys
-      leftover = fn.omit data, mapping_keys
-      query_str = fn.queryString leftover
-      request_url = fn.transformUrl action_url, mapping_data
-      headers = fn.extend {}, DEFAULT_HEADERS, action_config.headers
+
+      # extract from the data provided things that should be mapped into
+      # the url based on the template provided.
+      mapping_data = fn.extractObjectMappings data, params, mapping_keys
+      leftover     = fn.omit data, mapping_keys
+      query_str    = fn.queryString leftover
+
+      # start preparing this request object with our information
+      request  =
+        url: fn.transformUrl url, mapping_data
+        headers: (headers? data)
+
+      # unless the user defined a function that returns a non-undefined value,
+      # use a combination of the default headers and user defined ones.
+      if request.headers is undefined
+        request.headers = fn.extend {}, DEFAULT_HEADERS
+        user_keys = Object.keys headers ? {}
+
+        # loop over potential user-defined header keys setting the current 
+        # header configuration's lowercase version of the key to the value
+        for key in user_keys
+          request.headers[fn.lower key] = headers[key]
+
+      # prepare the new xmlhttprequest object
       xhr = fn.xhr()
 
       # if there is parameters leftover after extracting, add them
       # to the request url after the original url
       if query_str != null and not has_body
-        request_url = "#{request_url}?#{query_str}"
+        request.url = "#{request.url}?#{query_str}"
 
-      request_method = (method? data) ? method
-      xhr.open request_method, request_url, true
+      # attempt to dynamically get method from config or use as is
+      request.method = (method? data) ? method
+      xhr.open request.method, request.url, true
 
-      for key, value of headers
+      for key, value of request.headers
         value = value data if isFunction value
+        key   = fn.lower key
         xhr.setRequestHeader key, value if value != undefined
 
       loaded = ->
@@ -270,7 +289,7 @@ Flyby = (resource_url, url_mappings, custom_actions) ->
 
         result = defaultResponseTransform response, headers
 
-        if isFunction transforms.response
+        if isFunction transforms?.response
           result = transforms.response response
 
         if isSuccess status_code
@@ -290,7 +309,7 @@ Flyby = (resource_url, url_mappings, custom_actions) ->
 
       # attempt to transform body data if the action has provided a request transform
       # callback
-      body_data = (transforms.request? data) ? defaultRequestTransform data
+      body_data = (transforms?.request? data) ? defaultRequestTransform data
   
       # complete the xhr by sending it with the body data
       xhr.send body_data

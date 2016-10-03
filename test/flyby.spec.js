@@ -202,6 +202,49 @@ describe("Flyby test suite", function() {
 
   });
 
+  describe("headers function test suite", function() {
+
+    var Resource = null;
+    var called   = null;
+    var headers  = null;
+
+    beforeEach(function() {
+      called  = false;
+      headers = {};
+
+      function getHeaders() {
+        called = true;
+        return headers;
+      }
+
+      Resource = Flyby("/api/custom-headers/:id", null, {
+        make: {
+          method: "GET",
+          headers: getHeaders
+        }
+      });
+    });
+
+    it("should use the headers function if defined on custom actions", function() {
+      expect(called).toBe(false);
+      headers.foo = "bar";
+      Resource.make({id: 10});
+      var requestHeaders = requests.latest().requestHeaders;
+      expect(called).toBe(true);
+      expect(requestHeaders).toEqual({foo: "bar"});
+    });
+
+    it("should use the headers function if defined on custom actions", function() {
+      expect(called).toBe(false);
+      headers["Caps-Foo"] = "bar";
+      Resource.make({id: 10});
+      var requestHeaders = requests.latest().requestHeaders;
+      expect(called).toBe(true);
+      expect(requestHeaders).toEqual({"caps-foo": "bar"});
+    });
+
+  });
+
   describe("basic resource definition", function() {
 
     beforeEach(function() {
@@ -351,6 +394,7 @@ describe("Flyby test suite", function() {
       });
 
     });
+
 
     describe("response handling", function() {
 

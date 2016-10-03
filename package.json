@@ -1,15 +1,15 @@
 {
   "name": "flyby",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "a lightweight, standalone library based on the angular ngresrouce service",
   "authors": [
     "Danny Hadley <dadleyy@gmail.com>"
   ],
   "scripts": {
-    "build:debug": "./node_modules/.bin/grunt",
-    "build:full": "./node_modules/.bin/grunt && ./node_modules/.bin/karma start --single-run && ./node_modules/.bin/remap-istanbul -i cov/coverage-final.json -o cov/coverage-final.json",
-    "build:release": "./node_modules/.bin/grunt release && ./node_modules/.bin/karma start --single-run && ./node_modules/.bin/remap-istanbul -i cov/coverage-final.json -o cov/coverage-final.json",
-    "test": "./node_modules/.bin/karma start --single-run=true"
+    "build:debug": "grunt",
+    "build:full": "grunt && karma start --single-run && remap-istanbul -i cov/coverage-final.json -o cov/coverage-final.json",
+    "build:release": "grunt release && karma start --single-run && remap-istanbul -i cov/coverage-final.json -o cov/coverage-final.json",
+    "test": "karma start --single-run=true"
   },
   "license": "ISC",
   "devDependencies": {
