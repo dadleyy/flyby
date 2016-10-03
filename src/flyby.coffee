@@ -285,9 +285,9 @@ Flyby = (resource_url, resource_url_mappings, custom_actions) ->
       loaded = ->
         {status: status_code, statusText: status_text, response} = xhr
         response ||= xhr.responseText
-        headers = xhr.getAllResponseHeaders()
+        response_headers = xhr.getAllResponseHeaders()
 
-        result = defaultResponseTransform response, headers
+        result = defaultResponseTransform response, response_headers
 
         if isFunction transforms?.response
           result = transforms.response response

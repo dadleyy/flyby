@@ -243,6 +243,22 @@ describe("Flyby test suite", function() {
       expect(requestHeaders).toEqual({"caps-foo": "bar"});
     });
 
+    it("should use the headers function if defined on custom actions (called conecutively)", function() {
+      expect(called).toBe(false);
+      headers = {"Caps-Foo": "bar"};
+      Resource.make({id: 10});
+      var requestHeaders = requests.latest().requestHeaders;
+      expect(called).toBe(true);
+      expect(requestHeaders).toEqual({"caps-foo": "bar"});
+
+      headers = {"Caps-Two": "bar"};
+
+      Resource.make({id: 10});
+      var requestHeaders = requests.latest().requestHeaders;
+      expect(called).toBe(true);
+      expect(requestHeaders).toEqual({"caps-two": "bar"});
+    });
+
   });
 
   describe("basic resource definition", function() {
